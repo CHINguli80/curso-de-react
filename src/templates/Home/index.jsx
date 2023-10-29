@@ -11,10 +11,10 @@ export const Home = () => {
   const [page, setPage] = useState(0)
   const [postsPerpage] = useState(10)
   const [searchValue, setSearchValue] = useState('')
-  
+
   const noMorePosts = page + postsPerpage >= allPosts.length
 
-  const filterPosts = !!searchValue ? 
+  const filterPosts = searchValue ?
     allPosts.filter(post => {
       return post.title.toLowerCase().includes(
         searchValue.toLowerCase()
@@ -24,7 +24,7 @@ export const Home = () => {
 
 
     const handleLoadPosts = useCallback(async (page, postsPerpage) => {
-      const postsAndPhotos = await loadPosts()  
+      const postsAndPhotos = await loadPosts()
 
       setPosts(postsAndPhotos.slice(page, postsPerpage))
       setAllPost(postsAndPhotos)
@@ -33,43 +33,43 @@ export const Home = () => {
     useEffect(() => {
       handleLoadPosts(0, postsPerpage)
     }, [handleLoadPosts, postsPerpage])
-  
+
     const loadMorePosts = () => {
       const nextPage = page + postsPerpage
       const nextPosts = allPosts.slice(nextPage, nextPage + postsPerpage)
       posts.push(...nextPosts)
-  
+
       setPosts(posts)
       setPage(nextPage)
-  
+
     }
-  
+
     const handleChange = (e) => {
         const {value} = e.target
         setSearchValue(value)
     }
-    
+
   return (
     <section className='container'>
-    
+
        <div className='search-container'>
            {!!searchValue && (
            <h1>Pesquisou por: {searchValue}</h1>
          )}
 
-         <TextInput 
-         searchValue={searchValue} 
+         <TextInput
+         searchValue={searchValue}
          handleChange={handleChange}
          />
        </div>
-    
+
         <div className="posts">
-      
+
         {filterPosts.length > 0 && (
        <>
         {
          filterPosts.map(post => (
-           <PostCard 
+           <PostCard
            key={post.id}
              post={post}
            />
@@ -84,39 +84,16 @@ export const Home = () => {
 
        <div className='button-container'>
          {!searchValue && (
-           <Button 
+           <Button
            text="Lore more Post"
            onclick={loadMorePosts}
            disabled={noMorePosts}
         />
          )}
-       
+
        </div>
      </div>
     </section>
    );
-  
+
 }
-
-
-/* export class Home2 extends Component {
-  state = {
-    posts: [],
-    allPosts: [],
-    page: 0,
-    postsPerpage: 12,
-    searchValue: ''
-  }
-
- async componentDidMount() {
-    await this.loadPosts()   
-  }
-
-  render() {
-    const { posts, page, postsPerpage, allPosts, searchValue } = this.state
-
-    
-  }
-  
-} */
- 
